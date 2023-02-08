@@ -29,17 +29,38 @@ class AppLayout extends Component
             'dashboard' => [
                 'icon' => 'home',
                 'title' => 'Dashboard',
-                'route_name' => 'dashboard',
+                'route_name' => 'admin.dashboard',
             ],
             'user' => [
                 'icon' => 'user',
                 'title' => 'Users',
-                'route_name' => 'admin.user.index',
+                'route_name' => 'admin.user',
             ],
             'role' => [
-                'icon' => 'settings',
+                'icon' => 'activity',
                 'title' => 'Roles',
-                'route_name' => 'admin.role.index',
+                'route_name' => 'admin.role',
+            ],
+            // To Be Updated
+            'topic' => [
+                'icon' => 'align-left',
+                'title' => 'Topics',
+                'route_name' => 'admin.topic',
+            ],
+            'questions' => [
+                'icon' => 'server',
+                'title' => 'Questions',
+                'route_name' => 'admin.question',
+            ],
+            'result' => [
+                'icon' => 'user-plus',
+                'title' => 'Quiz Users',
+                'route_name' => 'admin.quiz_user',
+            ],
+            'quiz_user' => [
+                'icon' => 'bar-chart-2',
+                'title' => 'Results',
+                'route_name' => 'admin.result',
             ],
         ];
     }

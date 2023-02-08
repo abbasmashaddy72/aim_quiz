@@ -35,7 +35,7 @@
                     <hr class="dropdown-divider border-white/[0.08]">
                 </li>
                 <li>
-                    <a href="{{ route('profile.update') }}" class="dropdown-item hover:bg-white/5"><i
+                    <a href="{{ route('admin.profile.update') }}" class="dropdown-item hover:bg-white/5"><i
                             data-feather="user" class="w-4 h-4 mr-2"></i>Profile</a>
                 </li>
                 <li>

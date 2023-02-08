@@ -15,4 +15,9 @@ class QuizUser extends Model
         'location',
         'mobile',
     ];
+
+    public function result()
+    {
+        return $this->hasMany(Result::class, 'quiz_user_id');
+    }
 }

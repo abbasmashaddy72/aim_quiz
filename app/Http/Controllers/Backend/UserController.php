@@ -13,89 +13,22 @@ class UserController extends Controller
         view()->share('title', 'Users');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        // $data = getKeyValuesWithMap('Role', 'name', 'id');
-        // print_r($data);
-        // exit;
-
         return view('pages.backend.users.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function impersonate(User $user)
     {
-        $data = null;
+        auth()->user()->impersonate($user);
 
-        return view('pages.backend.users.ces', compact('data'));
+        return redirect()->route('home.index');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function leaveImpersonate()
     {
-        //
-    }
+        auth()->user()->leaveImpersonation();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $data = User::findOrFail($id);
-
-        return view('pages.backend.users.ces', compact('data'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $data = User::findOrFail($id);
-
-        return view('pages.backend.users.ces', compact('data'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect()->route('home.index');
     }
 }

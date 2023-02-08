@@ -9,7 +9,7 @@ class Question extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['topic_id', 'question_text', 'answer_explanation', 'more_info_link'];
+    protected $fillable = ['topic_id', 'question_text', 'answer_explanation', 'more_info_link', 'age_restriction'];
 
     public function topic()
     {

@@ -2,6 +2,7 @@
 
 use App\Models\StaticOption;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 // Gets Route Action Names
@@ -81,5 +82,20 @@ if (!function_exists('get_static_option')) {
         });
 
         return !empty($value) ? $value->option_value : null;
+    }
+}
+
+// Get Enum Values
+if (!function_exists('getEnum')) {
+    function getEnum($table_name, $colum_name)
+    {
+        $values = DB::select(DB::raw('SHOW COLUMNS FROM ' . $table_name . ' WHERE Field = "' . $colum_name . '"'));
+
+        preg_match('/^enum\((.*)\)$/', $values[0]->Type, $matches);
+        foreach (explode(',', $matches[1]) as $value) {
+            $enum[trim($value, "'")] = trim($value, "'");
+        }
+
+        return $enum;
     }
 }

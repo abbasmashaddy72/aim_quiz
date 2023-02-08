@@ -10,11 +10,11 @@ class Result extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'topic_id', 'question_id', 'option_id', 'correct', 'date'];
+    protected $fillable = ['quiz_user_id', 'topic_id', 'question_id', 'option_id', 'correct', 'date'];
 
-    public function user()
+    public function quiz_user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(QuizUser::class, 'quiz_user_id');
     }
 
     public function topic()

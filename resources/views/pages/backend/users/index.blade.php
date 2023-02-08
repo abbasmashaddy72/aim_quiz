@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="breadcrumb">{{ Breadcrumbs::render('user.index') }}</x-slot>
+    <x-slot name="breadcrumb">{{ Breadcrumbs::render('admin.user') }}</x-slot>
 
     <x-backend.grid>
         <x-slot name="rt_button">

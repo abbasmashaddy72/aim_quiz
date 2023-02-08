@@ -14,13 +14,37 @@ Breadcrumbs::for('#', function (BreadcrumbTrail $trail) {
 });
 
 // Application > User
-Breadcrumbs::for('user.index', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('admin.user', function (BreadcrumbTrail $trail) {
     $trail->parent('#');
-    $trail->push('User', route('admin.user.index'));
+    $trail->push('User', route('admin.user'));
 });
 
 // Application > Role
-Breadcrumbs::for('role.index', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('admin.role', function (BreadcrumbTrail $trail) {
     $trail->parent('#');
-    $trail->push('Role', route('admin.role.index'));
+    $trail->push('Role', route('admin.role'));
+});
+
+// Application > Topic
+Breadcrumbs::for('admin.topic', function (BreadcrumbTrail $trail) {
+    $trail->parent('#');
+    $trail->push('Topic', route('admin.topic'));
+});
+
+// Application > Question
+Breadcrumbs::for('admin.question', function (BreadcrumbTrail $trail) {
+    $trail->parent('#');
+    $trail->push('Question', route('admin.question'));
+});
+
+// Application > Quiz User
+Breadcrumbs::for('admin.quiz_user', function (BreadcrumbTrail $trail) {
+    $trail->parent('#');
+    $trail->push('Quiz User', route('admin.quiz_user'));
+});
+
+// Application > Result
+Breadcrumbs::for('admin.result', function (BreadcrumbTrail $trail) {
+    $trail->parent('#');
+    $trail->push('Result', route('admin.result'));
 });
