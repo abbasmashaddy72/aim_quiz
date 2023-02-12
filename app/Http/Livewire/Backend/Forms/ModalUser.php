@@ -78,7 +78,6 @@ class ModalUser extends ModalComponent
         $this->closeModal();
     }
 
-
     public function render()
     {
         $roles = Role::get();

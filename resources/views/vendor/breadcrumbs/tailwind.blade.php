@@ -1,5 +1,5 @@
 @unless($breadcrumbs->isEmpty())
-    <nav aria-label="breadcrumb" class="hidden mr-auto -intro-x sm:flex">
+    <nav aria-label="breadcrumb" class="hidden mr-auto sm:flex">
         <ol class="breadcrumb">
             @foreach ($breadcrumbs as $breadcrumb)
                 @if ($breadcrumb->url && !$loop->last)

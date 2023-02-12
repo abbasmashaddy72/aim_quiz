@@ -1,5 +1,5 @@
 <div class="flex justify-around space-x-1">
-    <button wire:click='$emit("openModal", "backend.forms.modal-role", @json(['role_id' => $id]))'
+    <button wire:click='$emit("openModal", "backend.forms.modal-topic", @json(['topic_id' => $id]))'
         class="p-1 text-teal-600 rounded hover:bg-teal-600 hover:text-white">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
@@ -9,7 +9,7 @@
         </svg>
     </button>
 
-    <button wire:click='$emit("openModal", "backend.forms.modal-role", @json(['role_id' => $id]))'
+    <button wire:click='$emit("openModal", "backend.forms.modal-topic", @json(['topic_id' => $id]))'
         class="p-1 rounded text-primary hover:bg-primary hover:text-white">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path

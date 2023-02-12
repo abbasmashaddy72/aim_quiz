@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->enum('type', ['Online', 'Offline', 'Marks']);
-            $table->string('qr');
+            $table->longText('qr');
             $table->string('age_restriction')->default(0);
             $table->string('pdf')->nullable();
             $table->timestamps();

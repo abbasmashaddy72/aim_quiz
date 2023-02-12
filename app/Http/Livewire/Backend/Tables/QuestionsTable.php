@@ -27,7 +27,7 @@ class QuestionsTable extends LivewireDatatable
             Column::index($this)
                 ->unsortable(),
 
-            Column::name('topic.name')
+            Column::name('topic.title')
                 ->searchable()
                 ->filterable()
                 ->label('Topic Name'),
@@ -36,7 +36,16 @@ class QuestionsTable extends LivewireDatatable
                 ->searchable()
                 ->filterable(),
 
-            NumberColumn::name('option.option:count')
+            Column::name('answer_explanation')
+                ->searchable()
+                ->filterable(),
+
+            Column::name('more_info_link')
+                ->searchable()
+                ->filterable()
+                ->label('Reference Text / Link'),
+
+            NumberColumn::name('options.option:count')
                 ->filterable()
                 ->label('Options Count'),
 
