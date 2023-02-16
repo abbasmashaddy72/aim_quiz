@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['namespace' => 'App\Http\Controllers\Frontend'], function () {
     Route::get('/', 'FrontendController@index')->name('homepage');
 
+    Route::get('quiz/{topic_id}', 'FrontendController@ready_quiz')->name('ready.quiz')->middleware('quiz.user');
+
     Route::get('/change-language/{lang}', 'LanguageController@changeLanguage');
 });
 

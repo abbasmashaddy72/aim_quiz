@@ -50,7 +50,7 @@ class ModalTopic extends ModalComponent
             $topic = Topic::where('id', $this->topic_id)->first();
 
             if (gettype($this->pdf) != 'string' && $topic->type != 'Marks') {
-                $validatedData['pdf'] = $this->pdf->store('topic');
+                $validatedData['pdf'] = $this->pdf->store('topic', 'public');
             }
             if ($this->type == 'Marks') {
                 unset($validatedData['age_restriction']);
@@ -63,7 +63,7 @@ class ModalTopic extends ModalComponent
             $this->notification()->success($title = 'Topic Updated Successfully!');
         } else {
             if (gettype($this->pdf) != 'string' && $this->type != 'Marks') {
-                $validatedData['pdf'] = $this->pdf->store('topic');
+                $validatedData['pdf'] = $this->pdf->store('topic', 'public');
             }
             $validatedData['qr'] = QrCode::size(100)->generate('Http');
 
