@@ -7,7 +7,7 @@
                     class="max-w-[400px] w-full m-auto p-6 bg-white dark:bg-slate-900 shadow-md dark:shadow-gray-800 rounded-md">
 
                     <a href="{{ route('homepage') }}">
-                        <img src="{{ asset('storage/' . get_static_option('logo')) }}" class="mx-auto" />
+                        <img src="{{ asset('images/logo.png') }}" class="mx-auto" />
                     </a>
 
                     <h5 class="my-6 text-xl font-semibold">{{ __('Reset Password') }}</h5>

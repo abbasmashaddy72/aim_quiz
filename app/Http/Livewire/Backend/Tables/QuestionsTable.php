@@ -15,7 +15,7 @@ class QuestionsTable extends LivewireDatatable
 
     public function builder()
     {
-        return Question::query()->with('topic', 'options');
+        return Question::query()->with('topics', 'options');
     }
 
     public function columns()
@@ -27,12 +27,16 @@ class QuestionsTable extends LivewireDatatable
             Column::index($this)
                 ->unsortable(),
 
-            Column::name('topic.title')
+            Column::name('topics.title')
                 ->searchable()
                 ->filterable()
                 ->label('Topic Name'),
 
             Column::name('question_text')
+                ->searchable()
+                ->filterable(),
+
+            Column::name('age_restriction')
                 ->searchable()
                 ->filterable(),
 

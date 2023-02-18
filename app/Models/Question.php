@@ -11,7 +11,7 @@ class Question extends Model
 
     protected $fillable = ['topic_id', 'question_text', 'answer_explanation', 'more_info_link', 'age_restriction'];
 
-    public function topic()
+    public function topics()
     {
         return $this->belongsTo(Topic::class, 'topic_id');
     }

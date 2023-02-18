@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="{{ $dark_mode ? 'dark' : '' }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="{{ $dark_mode ? 'dark' : '' }}" translate="no">
 
 <head>
     <meta charset="utf-8">
@@ -22,7 +22,7 @@
     @livewireStyles
 </head>
 
-<body class="text-base text-black font-nunito dark:text-white dark:bg-slate-900"
+<body class="mb-0 text-base text-black font-nunito dark:text-white dark:bg-slate-900"
     @env('production') oncontextmenu="return false;" @endenv>
 
     @include('layouts.fePartials.header')
@@ -58,4 +58,4 @@
     @endenv
 </body>
 
-</html>
+</translate=>

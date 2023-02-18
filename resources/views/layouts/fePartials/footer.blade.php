@@ -3,72 +3,16 @@
     <div class="container">
         <div class="grid grid-cols-12">
             <div class="col-span-12">
-                <div class="py-[60px] px-0">
-                    <div class="grid md:grid-cols-12 grid-cols-1 gap-[30px]">
-                        <div class="lg:col-span-4 md:col-span-12">
+                <div class="py-[15px] px-0">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
                             <a href="#" class="text-[22px] focus:outline-none">
-                                <img src="{{ asset('storage/' . get_static_option('logo')) }}" alt="" />
+                                <img src="{{ asset('images/logo.png') }}" class="h-24" />
                             </a>
-                            <p class="text-gray-300">{{ get_static_option('short_description') }}</p>
-                            <ul class="mt-6 list-none">
-                                <li class="inline">
-                                    <a href="{{ '//' . get_static_option('fb_url') }}"
-                                        class="border border-gray-800 rounded-md btn btn-icon btn-sm hover:border-indigo-600 dark:hover:border-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-600">
-                                        <i data-feather="facebook" class="w-4 h-4"></i>
-                                    </a>
-                                </li>
-                                <li class="inline">
-                                    <a href="{{ '//' . get_static_option('instagram_url') }}"
-                                        class="border border-gray-800 rounded-md btn btn-icon btn-sm hover:border-indigo-600 dark:hover:border-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-600">
-                                        <i data-feather="instagram" class="w-4 h-4"></i>
-                                    </a>
-                                </li>
-                                <li class="inline">
-                                    <a href="{{ '//' . get_static_option('twitter_url') }}"
-                                        class="border border-gray-800 rounded-md btn btn-icon btn-sm hover:border-indigo-600 dark:hover:border-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-600">
-                                        <i data-feather="twitter" class="w-4 h-4"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                            <!--end icon-->
                         </div>
-                        <!--end col-->
-
-                        <div class="lg:col-span-2 md:col-span-4">
-                            <ul class="mt-6 list-none footer-list">
-                                {{-- <li>
-                                    <a href="{{ route('homepage') }}"
-                                        class="text-gray-300 duration-500 ease-in-out hover:text-gray-400">
-                                        <i class="uil uil-angle-right-b me-1"></i>Home</a>
-                                </li>
-                                <li class="mt-[10px]">
-                                    <a href="{{ route('about_us') }}"
-                                        class="text-gray-300 duration-500 ease-in-out hover:text-gray-400">
-                                        <i class="uil uil-angle-right-b me-1"></i>About us</a>
-                                </li>
-                                <li class="mt-[10px]">
-                                    <a href="{{ route('services') }}"
-                                        class="text-gray-300 duration-500 ease-in-out hover:text-gray-400">
-                                        <i class="uil uil-angle-right-b me-1"></i>Services</a>
-                                </li>
-                                <li class="mt-[10px]">
-                                    <a href="{{ route('doctors') }}"
-                                        class="text-gray-300 duration-500 ease-in-out hover:text-gray-400">
-                                        <i class="uil uil-angle-right-b me-1"></i>Doctors</a>
-                                </li>
-                                <li class="mt-[10px]">
-                                    <a href="{{ route('gallery') }}"
-                                        class="text-gray-300 duration-500 ease-in-out hover:text-gray-400">
-                                        <i class="uil uil-angle-right-b me-1"></i>Gallery</a>
-                                </li>
-                                <li class="mt-[10px]">
-                                    <a href="{{ route('contact_us') }}"
-                                        class="text-gray-300 duration-500 ease-in-out hover:text-gray-400">
-                                        <i class="uil uil-angle-right-b me-1"></i>Contact</a>
-                                </li> --}}
-                            </ul>
+                        <div class="text-center text-gray-300 duration-500 ease-in-out hover:text-gray-400">
+                            Courtesy: Association of Imam Mahdi (AS)
                         </div>
-                        <!--end col-->
                     </div>
                     <!--end grid-->
                 </div>

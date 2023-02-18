@@ -15,46 +15,72 @@ class ReadyQuiz extends Component
     // Model Custom Topic Value
     public $topic, $selectedTopicId, $topic_pdf;
     // Model Custom Question Values
-    public $count, $quizSize, $currentQuestion;
+    public $count, $quizSize, $currentQuestion, $restricted_age;
     // Model Custom Result Values
     public $currentQuizAnswers, $quizPercentage, $totalQuizQuestions;
     // Custom Values
     public $quizRegister = true; // Progress
+    public $quizSlides = false; // Progress
     public $quizInProgress = false; // Progress
     public $showResult = false; // Progress
+    public $preRegister = false; // Progress
     public $isDisabled = true; // Button
     public $userAnswered; // Checkbox
     public $answeredQuestions = []; // Answered Question List
 
+    protected $rules = [
+        'name' => 'required',
+        'age' => 'required',
+        'location' => 'required',
+        'mobile' => 'required|numeric|digits:10',
+    ];
+
     public function registerQuizUser() // Registered User
     {
-        $this->quizRegister = false;
+        $validatedData = $this->validate();
 
-        $quizUser = QuizUser::create([
-            'name' => $this->name,
-            'age' => $this->age,
-            'location' => $this->location,
-            'mobile' => $this->mobile
-        ]);
+        $quizUser = QuizUser::create($validatedData);
 
-        $this->quizUserId = $quizUser->id; // $quizUser->id;
+        $topic_type = Topic::where('id', $this->selectedTopicId)->pluck('type')->first();
 
-        $this->topic_pdf = Topic::where('id', $this->selectedTopicId)->pluck('pdf')->first();
-        $this->topic = Topic::where('id', $this->selectedTopicId)->get();
+        if ($topic_type == 'Marks') {
+            $this->quizRegister = false;
+            $this->preRegister = true;
+        } else {
+            $this->quizRegister = false;
 
-        $this->topic->transform(function ($category) {
-            $category->questions = Question::whereHas('topic', function ($q) use ($category) {
-                $q->where('id', $category->id);
-            })->inRandomOrder()
-                ->take(10)
-                ->get();
-            return $category;
-        });
-        $this->quizSize = $this->topic->first()->questions->count();
+            $this->quizUserId = $quizUser->id; // $quizUser->id;
+            $quizUserAge = $quizUser->age;
 
-        $this->count = 1;
-        $this->currentQuestion = $this->getNextQuestion();
+            if ($quizUserAge > 12) {
+                $this->restricted_age = '>=12';
+            } else {
+                $this->restricted_age = '<=12';
+            }
 
+            $this->topic = Topic::where('id', $this->selectedTopicId)->get();
+
+            $this->topic->transform(function ($category) {
+                $category->questions = Question::whereHas('topics', function ($q) use ($category) {
+                    $q->where('id', $category->id);
+                })->where('age_restriction', '=', $this->restricted_age)
+                    ->inRandomOrder()
+                    ->take(5)
+                    ->get();
+                return $category;
+            });
+            $this->quizSize = $this->topic->first()->questions->count();
+
+            $this->count = 1;
+            $this->currentQuestion = $this->getNextQuestion();
+
+            $this->quizSlides = true;
+        }
+    }
+
+    public function startQuiz()
+    {
+        $this->quizSlides = false;
         $this->quizInProgress = true;
     }
 
@@ -72,6 +98,7 @@ class ReadyQuiz extends Component
         $question = Question::where('topic_id', $this->selectedTopicId)
             ->with('options')
             ->whereNotIn('id', $this->answeredQuestions)
+            ->where('age_restriction', '=', $this->restricted_age)
             ->inRandomOrder()
             ->first();
 
@@ -110,7 +137,7 @@ class ReadyQuiz extends Component
 
     public function showResults() // Show Results
     {
-        $this->topic_pdf = Topic::where('id', $this->selectedTopicId)->get('pdf');
+        $this->topic_pdf = Topic::where('id', $this->selectedTopicId)->pluck('pdf')->first();
         // Get a count of total number of quiz questions in Quiz table for the just finished quiz.
         $this->totalQuizQuestions = Result::where('topic_id', $this->selectedTopicId)->where('quiz_user_id', $this->quizUserId)->count();
         // Get a count of correctly answered questions for this quiz.

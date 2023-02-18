@@ -7,7 +7,7 @@
                      <form wire:submit.prevent>
                          <div class="px-4 py-5 sm:px-6">
                              <h3 class="mb-2 text-lg font-medium leading-6 text-gray-900">
-                                 Register Quiz User
+                                 Registration Form
                              </h3>
                              <div class="grid grid-cols-1 gap-4">
                                  <x-input label="{{ __('Name') }}" name="name" wire:model.defer='name'
@@ -27,6 +27,21 @@
                              </button>
                          </div>
                      </form>
+                 @endif
+
+                 @if ($quizSlides)
+                     <div class="px-4 py-5 sm:px-6">
+                         <h3 class="mb-2 text-lg font-medium leading-6 text-gray-900">
+                             Slides
+                         </h3>
+
+                         <div class="flex items-center justify-end mt-4">
+                             <button wire:click="startQuiz" type="submit"
+                                 class="inline-flex items-center px-4 py-2 mr-4 text-xs font-semibold tracking-widest text-white uppercase transition bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25">
+                                 {{ __('Start Quiz') }}
+                             </button>
+                         </div>
+                     </div>
                  @endif
 
                  @if ($quizInProgress)
@@ -121,11 +136,11 @@
                                  <div class="flex flex-wrap justify-center">
                                      {{ __('Thanks for attempting the Quiz, Please Collect Your Gift.') }}
                                  </div>
-                                 @if (!empty($topic_pdf))
+                                 @if (!is_null($topic_pdf))
                                      <div class="flex justify-center mt-4 space-x-2">
                                          <div>
                                              <a href="{{ asset('storage/' . $topic_pdf) }}" download
-                                                 class="inline-block px-6 pt-2.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex align-center">
+                                                 class="px-6 pt-2.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex align-center">
                                                  <svg aria-hidden="true" focusable="false" data-prefix="fas"
                                                      data-icon="download" class="w-3 mr-2" role="img"
                                                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -141,6 +156,11 @@
                              </div>
                          </div>
                      </section>
+                 @endif
+
+                 @if ($preRegister)
+                     You Have Registered Your Self For Children's Exhibition.<br> Collect Your Gift At Registration
+                     Counter On Exhibition Day.
                  @endif
              </div>
          </div>

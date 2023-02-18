@@ -65,6 +65,7 @@ class ModalQuestion extends ModalComponent
         $data = Topic::findOrFail($this->topic_id);
 
         $this->topic_type = $data->type;
+        $this->topic_age_restriction = $data->age_restriction;
     }
 
     public function updated($propertyName)
