@@ -6,18 +6,32 @@
                  @if ($quizRegister)
                      <form wire:submit.prevent>
                          <div class="px-4 py-5 sm:px-6">
-                             <h3 class="mb-2 text-lg font-medium leading-6 text-gray-900">
+                             <h3 class="mb-2 text-lg font-medium leading-6 text-gray-900 dark:text-white">
                                  Registration Form
                              </h3>
                              <div class="grid grid-cols-1 gap-4">
                                  <x-input label="{{ __('Name') }}" name="name" wire:model.defer='name'
                                      placeholder="Your Name" type="text" required autofocus />
-                                 <x-input label="{{ __('Age (in Years)') }}" name="age" wire:model.defer='age'
+
+                                 @if ($topicType == 'Marks')
+                                     <x-input label="{{ __('Father Name') }}" name="father_name"
+                                         wire:model.defer='father_name' placeholder="Your Father Name" type="text"
+                                         required />
+                                 @endif
+
+                                 <x-native-select label="Select Gender" placeholder="Select Gender" :options="['Male', 'Female']"
+                                     wire:model="gender" />
+
+                                 <x-input label="{{ __('Age (in Years)') }}" name="age" wire:model.defer='dob'
                                      placeholder="26" type="number" required />
+
                                  <x-input label="{{ __('Location') }}" name="location" wire:model.defer='location'
                                      placeholder="Locality" type="text" required />
+
                                  <x-input label="{{ __('Contact Number') }}" name="mobile" wire:model.defer='mobile'
                                      placeholder="910123456789" type="number" required />
+
+                                 <x-checkbox id="checkbox" wire:model="aic" label='Do you Attend Any Islamic Class?' />
                              </div>
                          </div>
                          <div class="flex items-center justify-end mt-4">
@@ -35,6 +49,10 @@
                              Slides
                          </h3>
 
+                         <p class="mb-2 leading-6 text-gray-900 text-md font-small">
+                             {{ $topic->matter }}
+                         </p>
+
                          <div class="flex items-center justify-end mt-4">
                              <button wire:click="startQuiz" type="submit"
                                  class="inline-flex items-center px-4 py-2 mr-4 text-xs font-semibold tracking-widest text-white uppercase transition bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25">
@@ -48,7 +66,7 @@
                      <div class="px-4 -py-3 sm:px-6 ">
                          <div class="flex justify-end max-w-auto">
                              <p class="max-w-2xl mt-1 text-sm text-gray-500">
-                                 <span class="p-1 font-extrabold text-gray-400">Quiz Progress</span>
+                                 <span class="p-1 font-extrabold text-gray-400 dark:text-white">Quiz Progress</span>
                                  <span
                                      class="p-3 font-bold leading-loose text-white bg-blue-500 rounded-full">{{ $count . '/' . $quizSize }}</span>
                              </p>
@@ -93,6 +111,25 @@
                      </form>
                  @endif
 
+                 @if ($quizDeclaration)
+                     <div class="px-4 py-5 sm:px-6">
+                         <h3 class="mb-2 text-lg font-medium leading-6 text-gray-900">
+                             Declaration
+                         </h3>
+
+                         <p class="mb-2 leading-6 text-gray-900 text-md font-small">
+                             {{ $topic->declaration }}
+                         </p>
+
+                         <div class="flex items-center justify-end mt-4">
+                             <button wire:click="showResults" type="submit"
+                                 class="inline-flex items-center px-4 py-2 mr-4 text-xs font-semibold tracking-widest text-white uppercase transition bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25">
+                                 {{ __('Show Results') }}
+                             </button>
+                         </div>
+                     </div>
+                 @endif
+
                  @if ($showResult)
                      <section class="text-gray-600 body-font">
                          <div class="overflow-hidden bg-white border-2 border-gray-300 shadow sm:rounded-lg">
@@ -120,8 +157,8 @@
                                              class="font-medium title-font">{{ $currentQuizAnswers }}</span>
                                      </div>
                                      <div class="flex items-center h-full p-4 bg-gray-100 rounded">
-                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                                             stroke-linecap="round" stroke-linejoin="round"
+                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                             stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
                                              class="flex-shrink-0 w-6 h-6 mr-4 text-indigo-500">
                                              <circle cx="12" cy="12" r="10"></circle>
                                              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -136,10 +173,10 @@
                                  <div class="flex flex-wrap justify-center">
                                      {{ __('Thanks for attempting the Quiz, Please Collect Your Gift.') }}
                                  </div>
-                                 @if (!is_null($topic_pdf))
+                                 @if (!is_null($topic->pdf))
                                      <div class="flex justify-center mt-4 space-x-2">
                                          <div>
-                                             <a href="{{ asset('storage/' . $topic_pdf) }}" download
+                                             <a href="{{ asset('storage/' . $topic->pdf) }}" download
                                                  class="px-6 pt-2.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex align-center">
                                                  <svg aria-hidden="true" focusable="false" data-prefix="fas"
                                                      data-icon="download" class="w-3 mr-2" role="img"

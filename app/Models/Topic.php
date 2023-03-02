@@ -11,10 +11,15 @@ class Topic extends Model
 
     protected $fillable = [
         'title',
+        'count',
+        'start',
+        'end',
         'type',
         'qr',
         'age_restriction',
-        'pdf'
+        'declaration',
+        'matter',
+        'pdf',
     ];
 
     public function questions()

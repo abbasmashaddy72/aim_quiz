@@ -6,22 +6,25 @@ use App\Models\Question;
 use App\Models\QuizUser;
 use App\Models\Result;
 use App\Models\Topic;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class ReadyQuiz extends Component
 {
     // Model Custom Quiz User Value
-    public $quizUserId, $name, $age, $location, $mobile;
+    public $quizUser, $quizUserId, $name, $father_name, $gender, $dob, $location, $mobile, $aic;
     // Model Custom Topic Value
-    public $topic, $selectedTopicId, $topic_pdf;
+    public $topic, $topicData, $selectedTopicId, $topic_pdf;
     // Model Custom Question Values
     public $count, $quizSize, $currentQuestion, $restricted_age;
     // Model Custom Result Values
-    public $currentQuizAnswers, $quizPercentage, $totalQuizQuestions;
+    public $currentQuizAnswers, $quizPercentage, $totalQuizQuestions, $allQuestions;
     // Custom Values
     public $quizRegister = true; // Progress
     public $quizSlides = false; // Progress
     public $quizInProgress = false; // Progress
+    public $quizDeclaration = false; // Progress
     public $showResult = false; // Progress
     public $preRegister = false; // Progress
     public $isDisabled = true; // Button
@@ -30,27 +33,47 @@ class ReadyQuiz extends Component
 
     protected $rules = [
         'name' => 'required',
-        'age' => 'required',
+        'father_name' => '',
+        'gender' => 'required',
+        'dob' => 'required',
         'location' => 'required',
-        'mobile' => 'required|numeric|digits:10',
+        'mobile' => 'required|numeric|digits:10|regex:/^[6-9]\d{9}$/',
+        'aic' => 'required',
     ];
 
     public function registerQuizUser() // Registered User
     {
         $validatedData = $this->validate();
+        $validatedData['unique_id'] = Str::random(5);
+        $current_dob = $validatedData['dob'];
 
-        $quizUser = QuizUser::create($validatedData);
+        $new_dob = new Carbon();
+        $validatedData['dob'] = $new_dob->subYears($current_dob)->format('Y-m-d');
 
-        $topic_type = Topic::where('id', $this->selectedTopicId)->pluck('type')->first();
+        $this->quizUser = QuizUser::create($validatedData);
 
-        if ($topic_type == 'Marks') {
+        $this->topic = Topic::where('id', $this->selectedTopicId)->first();
+
+        if (!is_null($this->topic->matter)) {
+            $this->quizRegister = false;
+            $this->quizSlides = true;
+        } else {
+            $this->startQuiz();
+        }
+    }
+
+    public function startQuiz()
+    {
+        $this->quizSlides = false;
+
+        if ($this->topic->type == 'Marks') {
             $this->quizRegister = false;
             $this->preRegister = true;
         } else {
             $this->quizRegister = false;
 
-            $this->quizUserId = $quizUser->id; // $quizUser->id;
-            $quizUserAge = $quizUser->age;
+            $this->quizUserId = $this->quizUser->id;
+            $quizUserAge = $this->quizUser->age;
 
             if ($quizUserAge > 12) {
                 $this->restricted_age = '>=12';
@@ -58,30 +81,24 @@ class ReadyQuiz extends Component
                 $this->restricted_age = '<=12';
             }
 
-            $this->topic = Topic::where('id', $this->selectedTopicId)->get();
+            $this->topicData = Topic::where('id', $this->selectedTopicId)->get();
 
-            $this->topic->transform(function ($category) {
+            $this->topicData->transform(function ($category) {
                 $category->questions = Question::whereHas('topics', function ($q) use ($category) {
                     $q->where('id', $category->id);
                 })->where('age_restriction', '=', $this->restricted_age)
                     ->inRandomOrder()
-                    ->take(5)
+                    ->take($category->count ?? 5)
                     ->get();
                 return $category;
             });
-            $this->quizSize = $this->topic->first()->questions->count();
+            $this->quizSize = $this->topicData->first()->questions->count();
 
             $this->count = 1;
             $this->currentQuestion = $this->getNextQuestion();
 
-            $this->quizSlides = true;
+            $this->quizInProgress = true;
         }
-    }
-
-    public function startQuiz()
-    {
-        $this->quizSlides = false;
-        $this->quizInProgress = true;
     }
 
     public function updatedUserAnswered() // User Answers
@@ -129,7 +146,12 @@ class ReadyQuiz extends Component
         $this->isDisabled = true;
 
         if ($this->count == $this->quizSize + 1) {
-            $this->showResults();
+            if (!is_null($this->topic->declaration)) {
+                $this->quizInProgress = false;
+                $this->quizDeclaration = true;
+            } else {
+                $this->showResults();
+            }
         }
 
         $this->currentQuestion = $this->getNextQuestion();
@@ -137,7 +159,7 @@ class ReadyQuiz extends Component
 
     public function showResults() // Show Results
     {
-        $this->topic_pdf = Topic::where('id', $this->selectedTopicId)->pluck('pdf')->first();
+        $this->quizDeclaration = false;
         // Get a count of total number of quiz questions in Quiz table for the just finished quiz.
         $this->totalQuizQuestions = Result::where('topic_id', $this->selectedTopicId)->where('quiz_user_id', $this->quizUserId)->count();
         // Get a count of correctly answered questions for this quiz.
@@ -145,6 +167,8 @@ class ReadyQuiz extends Component
             ->where('correct', '1')
             ->where('quiz_user_id', $this->quizUserId)
             ->count();
+
+        $this->allQuestions = Result::with('question', 'option')->where('quiz_user_id', $this->quizUserId)->get();
         // Calculate score for updating the quiz_header table before finishing the quid.
         $this->quizPercentage = round(($this->currentQuizAnswers / $this->totalQuizQuestions) * 100, 2);
         // Hide quiz div and show result div wrapped in if statements in the blade template.
@@ -154,6 +178,8 @@ class ReadyQuiz extends Component
 
     public function render()
     {
-        return view('livewire.frontend.form.ready-quiz');
+        $topicType = Topic::where('id', $this->selectedTopicId)->pluck('type')->first();
+
+        return view('livewire.frontend.form.ready-quiz', compact('topicType'));
     }
 }

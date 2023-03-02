@@ -10,10 +10,14 @@ class QuizUser extends Model
     use HasFactory;
 
     protected $fillable = [
+        'unique_id',
         'name',
-        'age',
+        'father_name',
+        'gender',
+        'dob',
         'location',
         'mobile',
+        'aic',
     ];
 
     public function result()

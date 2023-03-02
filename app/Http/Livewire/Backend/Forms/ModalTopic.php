@@ -14,25 +14,34 @@ class ModalTopic extends ModalComponent
     // Set Data
     public $topic_id;
     // Model Values
-    public $title, $type, $qr, $age_restriction, $pdf;
-
+    public $title, $count, $start, $end, $type, $qr, $age_restriction, $declaration, $matter, $pdf;
     public function mount()
     {
         if (!empty($this->topic_id)) {
             $data = Topic::findOrFail($this->topic_id);
             $this->title = $data->title;
+            $this->count = $data->count;
+            $this->start = $data->start;
+            $this->end = $data->end;
             $this->type = $data->type;
             $this->qr = $data->qr;
             $this->age_restriction = $data->age_restriction;
+            $this->declaration = $data->declaration;
+            $this->matter = $data->matter;
             $this->pdf = $data->pdf;
         }
     }
 
     protected $rules = [
         'title' => '',
+        'count' => '',
+        'start' => '',
+        'end' => '',
         'type' => '',
         'qr' => '',
         'age_restriction' => '',
+        'declaration' => '',
+        'matter' => '',
         'pdf' => '',
     ];
 

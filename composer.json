@@ -17,6 +17,7 @@
         "davmixcool/laravel-meta-manager": "^1.2",
         "dietercoopman/smart": "^1.6",
         "diglactic/laravel-breadcrumbs": "^8.0",
+        "doctrine/dbal": "^3.6",
         "guzzlehttp/guzzle": "^7.2",
         "jorenvanhocht/laravel-share": "^4.2",
         "kirschbaum-development/eloquent-power-joins": "^2.6",

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['namespace' => 'App\Http\Controllers\Frontend'], function () {
     Route::get('/', 'FrontendController@index')->name('homepage');
 
-    Route::get('quiz/{topic_id}', 'FrontendController@ready_quiz')->name('ready.quiz')->middleware('quiz.user');
+    Route::get('quiz/{topic}', 'FrontendController@ready_quiz')->name('ready.quiz')->middleware('quiz.user');
 
     Route::get('/change-language/{lang}', 'LanguageController@changeLanguage');
 });
@@ -41,6 +41,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['web', 'au
     Route::get('/leave-impersonate', 'UserController@leaveImpersonate')->name('users.leave-impersonate');
 
     Route::get('topic', 'TopicController@index')->name('topic');
+    Route::post('image_upload', 'TopicController@ck_upload')->name('ckeditor.upload');
+
     Route::get('question', 'QuestionController@index')->name('question');
     Route::get('quiz_user', 'QuizUserController@index')->name('quiz_user');
     Route::get('result', 'ResultController@index')->name('result');

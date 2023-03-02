@@ -18,7 +18,7 @@
     </div>
 
     <div class="justify-between px-4 pb-5 bg-white sm:px-4 sm:flex">
-        <button wire:click="$emit('closeModal')" type="button" class="btn btn-danger">Close Modal</button>
+        <button wire:click="$emit('closeModal')" type="button" class="btn btn-danger">Close</button>
         {{ $buttons }}
     </div>
     @if ($formAction)
