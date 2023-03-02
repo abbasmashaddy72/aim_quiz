@@ -21,15 +21,15 @@ class ModalQuestion extends ModalComponent
     public function mount()
     {
         if (!empty($this->question_id)) {
-            $data = Question::with('topic', 'options')->findOrFail($this->question_id);
+            $data = Question::with('topics', 'options')->findOrFail($this->question_id);
             $this->topic_id = $data->topic_id;
             $this->question_text = $data->question_text;
             $this->answer_explanation = $data->answer_explanation;
             $this->more_info_link = $data->more_info_link;
             $this->age_restriction = $data->age_restriction;
             // Topic
-            $this->topic_type = $data->topic->type;
-            $this->topic_age_restriction = $data->topic->age_restriction;
+            $this->topic_type = $data->topics->type;
+            $this->topic_age_restriction = $data->topics->age_restriction;
             // Option
             foreach ($data->options as $key => $options) {
                 if ($key == 0) {

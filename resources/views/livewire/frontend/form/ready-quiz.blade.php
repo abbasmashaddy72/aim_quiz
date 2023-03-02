@@ -15,7 +15,7 @@
 
                                  @if ($topicType == 'Marks')
                                      <x-input label="{{ __('Father Name') }}" name="father_name"
-                                         wire:model.defer='father_name' placeholder="Your Father Name" type="text"
+                                         wire:model.defer='father_name' placeholder="Your Father's Name" type="text"
                                          required />
                                  @endif
 
@@ -23,15 +23,25 @@
                                      wire:model="gender" />
 
                                  <x-input label="{{ __('Age (in Years)') }}" name="age" wire:model.defer='dob'
-                                     placeholder="26" type="number" required />
+                                     placeholder="Please Fill Your Age" type="number" required />
 
                                  <x-input label="{{ __('Location') }}" name="location" wire:model.defer='location'
                                      placeholder="Locality" type="text" required />
 
                                  <x-input label="{{ __('Contact Number') }}" name="mobile" wire:model.defer='mobile'
-                                     placeholder="910123456789" type="number" required />
+                                     placeholder="Please Enter Your 10 Digits Mobile Number" type="number" required />
 
-                                 <x-checkbox id="checkbox" wire:model="aic" label='Do you Attend Any Islamic Class?' />
+                                 <x-label label="Do you Attend Any Islamic Class?" />
+                                 <label class="inline-flex items-center">
+                                     <input type="radio" class="w-4 h-4 form-radio" id="yes" value="1"
+                                         wire:model="aic">
+                                     <span class="ml-2">Yes</span>
+                                 </label>
+                                 <label class="inline-flex items-center">
+                                     <input type="radio" class="w-4 h-4 form-radio" id="no" value="0"
+                                         wire:model="aic">
+                                     <span class="ml-2">No, I want to Join</span>
+                                 </label>
                              </div>
                          </div>
                          <div class="flex items-center justify-end mt-4">

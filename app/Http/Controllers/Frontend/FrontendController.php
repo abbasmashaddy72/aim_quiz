@@ -16,7 +16,7 @@ class FrontendController extends Controller
 
     public function ready_quiz(Topic $topic)
     {
-        view()->share('title', 'New Quiz User');
+        view()->share('title', $topic->title);
         $topic_id = $topic->id;
 
         if ($topic->start >= date('Y-m-d') && $topic->end <= date('Y-m-d')) {
