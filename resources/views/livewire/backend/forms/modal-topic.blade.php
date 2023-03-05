@@ -9,16 +9,16 @@
 
             <x-input name="title" label="Title" type="text" wire:model='title' />
 
+            <x-input name="start" label="Start Date" type="date" wire:model='start' />
+
+            <x-input name="end" label="End Date" type="date" wire:model='end' />
+
             @if ($type == 'Online' || $type == 'Offline')
                 <div class="mt-2">
                     <x-checkbox id="age_restriction" label="Age Restriction" wire:model="age_restriction" />
                 </div>
 
                 <x-input name="count" label="Total Question Count" type="number" wire:model='count' />
-
-                <x-input name="start" label="Start Date" type="date" wire:model='start' />
-
-                <x-input name="end" label="End Date" type="date" wire:model='end' />
 
                 <x-textarea wire:model="declaration" label="Declaration" placeholder="Your Declaration Message" />
 

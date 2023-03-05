@@ -50,6 +50,7 @@ class ModalQuizUser extends ModalComponent
     public function add()
     {
         $validatedData = $this->validate();
+
         $current_dob = $validatedData['dob'];
 
         $new_dob = new Carbon();
@@ -62,6 +63,7 @@ class ModalQuizUser extends ModalComponent
 
             $this->notification()->success($title = 'Quiz User Updated Successfully!');
         } else {
+            $validatedData['unique_id'] = Str::random(5);
             $user = QuizUser::create($validatedData);
 
             $this->notification()->success($title = 'Quiz User Saved Successfully!');
