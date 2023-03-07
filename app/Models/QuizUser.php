@@ -20,6 +20,10 @@ class QuizUser extends Model
         'aic',
     ];
 
+    protected $casts = [
+        'dob' => 'date:Y-m-d',
+    ];
+
     public function result()
     {
         return $this->hasMany(Result::class, 'quiz_user_id');

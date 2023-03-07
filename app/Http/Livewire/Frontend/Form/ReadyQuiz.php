@@ -13,13 +13,13 @@ use Livewire\Component;
 class ReadyQuiz extends Component
 {
     // Model Custom Quiz User Value
-    public $quizUser, $quizUserId, $name, $father_name, $gender, $dob, $location, $mobile, $aic;
+    public $quizUserId, $name, $father_name, $gender, $dob, $location, $mobile, $aic;
     // Model Custom Topic Value
-    public $topic, $topicData, $selectedTopicId, $topic_pdf;
+    public $topic, $topicData;
     // Model Custom Question Values
     public $count, $quizSize, $currentQuestion, $restricted_age;
     // Model Custom Result Values
-    public $currentQuizAnswers, $quizPercentage, $totalQuizQuestions, $allQuestions;
+    public $currentQuizAnswers, $quizPercentage, $totalQuizQuestions, $currentResultData, $answeredQuestionsWithOptions;
     // Custom Values
     public $quizRegister = true; // Progress
     public $quizSlides = false; // Progress
@@ -44,15 +44,14 @@ class ReadyQuiz extends Component
     public function registerQuizUser() // Registered User
     {
         $validatedData = $this->validate();
+
         $validatedData['unique_id'] = Str::random(5);
         $current_dob = $validatedData['dob'];
-
         $new_dob = new Carbon();
         $validatedData['dob'] = $new_dob->subYears($current_dob)->format('Y-m-d');
 
-        $this->quizUser = QuizUser::create($validatedData);
-
-        $this->topic = Topic::where('id', $this->selectedTopicId)->first();
+        $quizUserData = QuizUser::create($validatedData);
+        $this->quizUserId = $quizUserData->id;
 
         if (!is_null($this->topic->matter)) {
             $this->quizRegister = false;
@@ -72,26 +71,39 @@ class ReadyQuiz extends Component
         } else {
             $this->quizRegister = false;
 
-            $this->quizUserId = $this->quizUser->id;
-            $quizUserAge = $this->quizUser->age;
+            $this->topicData = Topic::where('id', $this->topic->id)->get();
 
-            if ($quizUserAge > 12) {
-                $this->restricted_age = '>=12';
+            if ($this->dob == 0) {
+                $this->topicData->transform(function ($category) {
+                    $category->questions = Question::whereHas('topics', function ($q) use ($category) {
+                        $q->where('id', $category->id);
+                    })->inRandomOrder()
+                        ->take($category->count ?? 5)
+                        ->get();
+                    return $category;
+                });
+            } elseif ($this->dob >= 12) {
+                $this->topicData->transform(function ($category) {
+                    $category->questions = Question::whereHas('topics', function ($q) use ($category) {
+                        $q->where('id', $category->id);
+                    })->where('age_restriction', '=', '>=12')
+                        ->inRandomOrder()
+                        ->take($category->count ?? 5)
+                        ->get();
+                    return $category;
+                });
             } else {
-                $this->restricted_age = '<=12';
+                $this->topicData->transform(function ($category) {
+                    $category->questions = Question::whereHas('topics', function ($q) use ($category) {
+                        $q->where('id', $category->id);
+                    })->where('age_restriction', '=', '<=12')
+                        ->inRandomOrder()
+                        ->take($category->count ?? 5)
+                        ->get();
+                    return $category;
+                });
             }
 
-            $this->topicData = Topic::where('id', $this->selectedTopicId)->get();
-
-            $this->topicData->transform(function ($category) {
-                $category->questions = Question::whereHas('topics', function ($q) use ($category) {
-                    $q->where('id', $category->id);
-                })->where('age_restriction', '=', $this->restricted_age)
-                    ->inRandomOrder()
-                    ->take($category->count ?? 5)
-                    ->get();
-                return $category;
-            });
             $this->quizSize = $this->topicData->first()->questions->count();
 
             $this->count = 1;
@@ -112,12 +124,27 @@ class ReadyQuiz extends Component
 
     public function getNextQuestion() // Next Question
     {
-        $question = Question::where('topic_id', $this->selectedTopicId)
-            ->with('options')
-            ->whereNotIn('id', $this->answeredQuestions)
-            ->where('age_restriction', '=', $this->restricted_age)
-            ->inRandomOrder()
-            ->first();
+        if ($this->dob == 0) {
+            $question = Question::where('topic_id', $this->topic->id)
+                ->with('options')
+                ->whereNotIn('id', $this->answeredQuestions)
+                ->inRandomOrder()
+                ->first();
+        } elseif ($this->dob >= 12) {
+            $question = Question::where('topic_id', $this->topic->id)
+                ->with('options')
+                ->whereNotIn('id', $this->answeredQuestions)
+                ->where('age_restriction', '=', '>=12')
+                ->inRandomOrder()
+                ->first();
+        } else {
+            $question = Question::where('topic_id', $this->topic->id)
+                ->with('options')
+                ->whereNotIn('id', $this->answeredQuestions)
+                ->where('age_restriction', '=', '<=12')
+                ->inRandomOrder()
+                ->first();
+        }
 
         if ($this->count < $this->quizSize) {
             array_push($this->answeredQuestions, $question->id);
@@ -161,25 +188,26 @@ class ReadyQuiz extends Component
     {
         $this->quizDeclaration = false;
         // Get a count of total number of quiz questions in Quiz table for the just finished quiz.
-        $this->totalQuizQuestions = Result::where('topic_id', $this->selectedTopicId)->where('quiz_user_id', $this->quizUserId)->count();
+        $this->totalQuizQuestions = Result::where('topic_id', $this->topic->id)->where('quiz_user_id', $this->quizUserId)->count();
         // Get a count of correctly answered questions for this quiz.
-        $this->currentQuizAnswers = Result::where('topic_id', $this->selectedTopicId)
+        $this->currentQuizAnswers = Result::where('topic_id', $this->topic->id)
             ->where('correct', '1')
             ->where('quiz_user_id', $this->quizUserId)
             ->count();
-
-        $this->allQuestions = Result::with('question', 'option')->where('quiz_user_id', $this->quizUserId)->get();
         // Calculate score for updating the quiz_header table before finishing the quid.
         $this->quizPercentage = round(($this->currentQuizAnswers / $this->totalQuizQuestions) * 100, 2);
         // Hide quiz div and show result div wrapped in if statements in the blade template.
         $this->quizInProgress = false;
         $this->showResult = true;
+
+        // Gets All Question Id's User Attended
+        $this->currentResultData = Result::where('quiz_user_id', $this->quizUserId)->get();
+        // dd($answeredQuestionIds);
+        $this->answeredQuestionsWithOptions = Question::whereIn('id', $this->currentResultData->pluck('question_id'))->with('options')->get();
     }
 
     public function render()
     {
-        $topicType = Topic::where('id', $this->selectedTopicId)->pluck('type')->first();
-
-        return view('livewire.frontend.form.ready-quiz', compact('topicType'));
+        return view('livewire.frontend.form.ready-quiz');
     }
 }

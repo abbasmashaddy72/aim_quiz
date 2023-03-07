@@ -13,7 +13,7 @@
                                  <x-input label="{{ __('Name') }}" name="name" wire:model.defer='name'
                                      placeholder="Your Name" type="text" required autofocus />
 
-                                 @if ($topicType == 'Marks')
+                                 @if ($topic->type == 'Marks')
                                      <x-input label="{{ __('Father Name') }}" name="father_name"
                                          wire:model.defer='father_name' placeholder="Your Father's Name" type="text"
                                          required />
@@ -148,6 +148,7 @@
                                      <h1
                                          class="mb-4 text-2xl font-medium text-center text-gray-900 sm:text-3xl title-font">
                                          Quiz Result</h1>
+
                                      <p class="mt-10 text-md"> Dear <span class="mr-2 font-extrabold text-blue-600">
                                              {{ $name . '!' }} </span>You have secured</p>
                                      <progress class="mx-auto text-base leading-relaxed xl:w-2/4 lg:w-3/4"
@@ -164,7 +165,22 @@
                                          </svg>
                                          <span class="mr-5 font-medium text-purple-700 title-font">Correct
                                              Answers</span><span
-                                             class="font-medium title-font">{{ $currentQuizAnswers }}</span>
+                                             class="font-medium title-font">{{ $currentQuizAnswers }}, (Green)</span>
+                                     </div>
+                                     <div class="flex items-center h-full p-4 bg-gray-100 rounded">
+                                         <svg fill="none" stroke="currentColor" stroke-linecap="round"
+                                             stroke-linejoin="round" stroke-width="3"
+                                             class="flex-shrink-0 w-6 h-6 mr-4 text-indigo-500" viewBox="0 0 24 24">
+                                             <circle cx="12" cy="12" r="10"></circle>
+                                             <line x1="12" y1="8" x2="12" y2="12">
+                                             </line>
+                                             <line x1="12" y1="16" x2="12.01" y2="16">
+                                             </line>
+                                         </svg>
+                                         <span class="mr-5 font-medium text-purple-700 title-font">Wrong
+                                             Answers</span><span
+                                             class="font-medium title-font">{{ $totalQuizQuestions - $currentQuizAnswers }},
+                                             (Red)</span>
                                      </div>
                                      <div class="flex items-center h-full p-4 bg-gray-100 rounded">
                                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -180,6 +196,39 @@
                                              class="font-medium title-font">{{ $totalQuizQuestions }}</span>
                                      </div>
                                  </div>
+
+                                 @foreach ($answeredQuestionsWithOptions as $item)
+                                     <div class="px-4 py-5 sm:px-6">
+                                         <h3 class="mb-2 text-lg font-medium leading-6 text-gray-900">
+                                             <span class="mr-2 font-extrabold"> {{ $loop->iteration }}</span>
+                                             {{ $item->question_text }}
+                                         </h3>
+                                         @php
+                                             $data = $currentResultData->filter(function ($data) use ($item) {
+                                                 return stripos($data['question_id'], $item->id) !== false;
+                                             });
+                                             
+                                         @endphp
+                                         @foreach ($item->options as $answer)
+                                             <label for="question-{{ $answer->id }}">
+                                                 <div
+                                                     class="px-3 py-3 m-3 text-sm text-gray-800 border-2 border-gray-300 rounded-lg max-w-auto @if ($answer->correct == 1) bg-green-600
+                                                         @elseif($data->first()->correct != 1 && $answer->id == $data->first()->option_id)
+                                                         bg-red-600
+                                                         @else @endif">
+                                                     <label class="inline-flex items-center">
+                                                         <input type="radio" class="w-4 h-4 form-radio"
+                                                             @if ($answer->correct == 1) checked @endif disabled
+                                                             id="question-{{ $answer->id }}"
+                                                             value="{{ $answer->id . ',' . $answer->correct }}">
+                                                         <span class="ml-2">{{ $answer->option }}</span>
+                                                     </label>
+                                                 </div>
+                                             </label>
+                                         @endforeach
+                                     </div>
+                                 @endforeach
+
                                  <div class="flex flex-wrap justify-center">
                                      {{ __('Thanks for attempting the Quiz, Please Collect Your Gift.') }}
                                  </div>

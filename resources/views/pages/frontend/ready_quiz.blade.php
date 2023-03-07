@@ -1,3 +1,3 @@
 <x-guest-layout>
-    @livewire('frontend.form.ready-quiz', ['selectedTopicId' => $topic_id])
+    @livewire('frontend.form.ready-quiz', ['topic' => $topic])
 </x-guest-layout>

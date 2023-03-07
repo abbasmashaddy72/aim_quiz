@@ -79,9 +79,13 @@ class ModalTopic extends ModalComponent
                 unset($validatedData['age_restriction']);
             }
 
+            if (is_null($validatedData['age_restriction'])) {
+                $validatedData['age_restriction'] = 0;
+            }
+
             $topic = Topic::create($validatedData);
 
-            $validatedData['qr'] = QrCode::size(100)->generate(route('ready.quiz', ['topic_id' => $topic->id]));
+            $validatedData['qr'] = QrCode::size(100)->generate(route('ready.quiz', ['topic' => $topic->id]));
 
             $topic->update(['qr' => $validatedData['qr']]);
 
