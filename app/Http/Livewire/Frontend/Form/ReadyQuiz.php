@@ -73,7 +73,7 @@ class ReadyQuiz extends Component
 
             $this->topicData = Topic::where('id', $this->topic->id)->get();
 
-            if ($this->dob == 0) {
+            if ($this->dob == 0 && $this->topic->age_restriction == 0) {
                 $this->topicData->transform(function ($category) {
                     $category->questions = Question::whereHas('topics', function ($q) use ($category) {
                         $q->where('id', $category->id);
@@ -82,7 +82,7 @@ class ReadyQuiz extends Component
                         ->get();
                     return $category;
                 });
-            } elseif ($this->dob >= 12) {
+            } elseif ($this->dob > 12 && $this->topic->age_restriction == 1) {
                 $this->topicData->transform(function ($category) {
                     $category->questions = Question::whereHas('topics', function ($q) use ($category) {
                         $q->where('id', $category->id);
@@ -92,12 +92,21 @@ class ReadyQuiz extends Component
                         ->get();
                     return $category;
                 });
-            } else {
+            } elseif ($this->dob <= 12 && $this->topic->age_restriction == 1) {
                 $this->topicData->transform(function ($category) {
                     $category->questions = Question::whereHas('topics', function ($q) use ($category) {
                         $q->where('id', $category->id);
                     })->where('age_restriction', '=', '<=12')
                         ->inRandomOrder()
+                        ->take($category->count ?? 5)
+                        ->get();
+                    return $category;
+                });
+            } else {
+                $this->topicData->transform(function ($category) {
+                    $category->questions = Question::whereHas('topics', function ($q) use ($category) {
+                        $q->where('id', $category->id);
+                    })->inRandomOrder()
                         ->take($category->count ?? 5)
                         ->get();
                     return $category;
@@ -124,24 +133,30 @@ class ReadyQuiz extends Component
 
     public function getNextQuestion() // Next Question
     {
-        if ($this->dob == 0) {
+        if ($this->dob == 0 && $this->topic->age_restriction == 0) {
             $question = Question::where('topic_id', $this->topic->id)
                 ->with('options')
                 ->whereNotIn('id', $this->answeredQuestions)
                 ->inRandomOrder()
                 ->first();
-        } elseif ($this->dob >= 12) {
+        } elseif ($this->dob > 12 && $this->topic->age_restriction == 1) {
             $question = Question::where('topic_id', $this->topic->id)
                 ->with('options')
                 ->whereNotIn('id', $this->answeredQuestions)
                 ->where('age_restriction', '=', '>=12')
                 ->inRandomOrder()
                 ->first();
-        } else {
+        } elseif ($this->dob <= 12 && $this->topic->age_restriction == 1) {
             $question = Question::where('topic_id', $this->topic->id)
                 ->with('options')
                 ->whereNotIn('id', $this->answeredQuestions)
                 ->where('age_restriction', '=', '<=12')
+                ->inRandomOrder()
+                ->first();
+        } else {
+            $question = Question::where('topic_id', $this->topic->id)
+                ->with('options')
+                ->whereNotIn('id', $this->answeredQuestions)
                 ->inRandomOrder()
                 ->first();
         }

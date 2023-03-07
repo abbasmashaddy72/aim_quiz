@@ -31,7 +31,7 @@
     class="fixed z-50 hidden text-lg leading-9 text-center text-white bg-indigo-600 rounded-full back-to-top bottom-5 right-5 h-9 w-9"><i
         class="uil uil-arrow-up"></i></a>
 <!-- Back to top -->
-
+{{--
 <!-- Switcher -->
 <div class="fixed z-50 top-1/4 -right-1">
     <span class="relative inline-block rotate-90">
@@ -45,4 +45,4 @@
         </label>
     </span>
 </div>
-<!-- Switcher -->
+<!-- Switcher --> --}}
